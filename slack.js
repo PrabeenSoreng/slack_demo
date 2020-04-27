@@ -1,6 +1,5 @@
 const express = require("express");
 const socketio = require("socket.io");
-
 let namespaces = require("./data/namespaces.js");
 
 const app = express();
@@ -11,20 +10,17 @@ const expressServer = app.listen(5000);
 const io = socketio(expressServer);
 
 io.on("connection", (socket) => {
-  socket.emit("messageFromServer", {
-    data: "Data from server.",
+  let nsData = namespaces.map((ns) => {
+    return {
+      img: ns.img,
+      endpoint: ns.endpoint,
+    };
   });
-  socket.on("messageToServer", (dataFromClient) => {
-    console.log(dataFromClient);
-  });
-  socket.join("level1");
-  socket
-    .to("level1")
-    .emit("joinedLevel1", `${socket.id} says I've joined level 1 room.`);
+  socket.emit("nsList", nsData);
 });
 
-const adminChannel = io.of("/admin");
-adminChannel.on("connection", (socket) => {
-  console.log("Someone is connected to the admin Namespace");
-  adminChannel.emit("welcomeAdminChannel", "Welcome to the admin channel!!!");
+namespaces.forEach((namespace) => {
+  io.of(namespace.endpoint).on("connection", (socket) => {
+    console.log(`${socket.id} has joined ${namespace.endpoint}`);
+  });
 });

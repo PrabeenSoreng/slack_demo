@@ -19,37 +19,5 @@ socket.on("nsList", (nsData) => {
       console.log(`${nsEndpoint} I should go to now.`);
     });
   });
-
-  const nsSocket = io("http://localhost:5000/wiki");
-  nsSocket.on("nsRoomLoad", (nsRooms) => {
-    let roomList = document.querySelector(".room-list");
-    roomList.innerHTML = "";
-    nsRooms.forEach((room) => {
-      let glyph;
-      if (room.privateRoom) glyph = "lock";
-      else glyph = "globe";
-      roomList.innerHTML += `
-      <li class="room">
-      <span class="glyphicon glyphicon-${glyph}"></span>${room.roomTitle}
-    </li>
-      `;
-    });
-    let roomNodes = document.getElementsByClassName("room");
-    Array.from(roomNodes).forEach((elem) => {
-      elem.addEventListener("click", (e) => {
-        console.log("Some one clicked on", e.target.innerText);
-      });
-    });
-  });
-});
-
-socket.on("messageFromServer", (dataFromServer) => {
-  console.log(dataFromServer);
-  socket.emit("messageToServer", {
-    data: "Data from the client.",
-  });
-});
-
-socket.on("joinedLevel1", (msg) => {
-  console.log(msg);
+  joinNS("/wiki");
 });

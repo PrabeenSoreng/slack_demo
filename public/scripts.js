@@ -3,6 +3,8 @@ const socket = io("http://localhost:5000");
 // const socket3 = io("http://localhost:5000/mozilla");
 // const socket4 = io("http://localhost:5000/linux");
 
+let nsSocket = "";
+
 socket.on("nsList", (nsData) => {
   console.log("The list of namespaces arrived", nsData);
   let namespacesDiv = document.querySelector(".namespaces");

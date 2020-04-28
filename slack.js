@@ -24,13 +24,8 @@ namespaces.forEach((namespace) => {
     console.log(`${nsSocket.id} has joined ${namespace.endpoint}`);
     nsSocket.emit("nsRoomLoad", namespaces[0].rooms);
 
-    nsSocket.on("joinRoom", (roomToJoin, numberOfMembersCB) => {
+    nsSocket.on("joinRoom", (roomToJoin) => {
       nsSocket.join(roomToJoin);
-      // io.of("/wiki")
-      //   .in(roomToJoin)
-      //   .clients((error, clients) => {
-      //     numberOfMembersCB(clients.length);
-      //   });
       const nsRoom = namespaces[0].rooms.find((room) => {
         return room.roomTitle === roomToJoin;
       });

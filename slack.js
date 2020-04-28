@@ -23,14 +23,25 @@ namespaces.forEach((namespace) => {
   io.of(namespace.endpoint).on("connection", (nsSocket) => {
     console.log(`${nsSocket.id} has joined ${namespace.endpoint}`);
     nsSocket.emit("nsRoomLoad", namespaces[0].rooms);
+
     nsSocket.on("joinRoom", (roomToJoin, numberOfMembersCB) => {
       nsSocket.join(roomToJoin);
+      // io.of("/wiki")
+      //   .in(roomToJoin)
+      //   .clients((error, clients) => {
+      //     numberOfMembersCB(clients.length);
+      //   });
+      const nsRoom = namespaces[0].rooms.find((room) => {
+        return room.roomTitle === roomToJoin;
+      });
+      nsSocket.emit("historyCatchUp", nsRoom.history);
       io.of("/wiki")
         .in(roomToJoin)
         .clients((error, clients) => {
-          numberOfMembersCB(clients.length);
+          io.of("/wiki").in(roomToJoin).emit("updateMembers", clients.length);
         });
     });
+
     nsSocket.on("newMessageToServer", (msg) => {
       const fullMsg = {
         text: msg.text,
@@ -39,6 +50,11 @@ namespaces.forEach((namespace) => {
         avatar: "https://via.placeholder.com/30",
       };
       const roomTitle = Object.keys(nsSocket.rooms)[1];
+      const nsRoom = namespaces[0].rooms.find((room) => {
+        return room.roomTitle === roomTitle;
+      });
+      nsRoom.addMessage(fullMsg);
+      console.log(nsRoom);
       io.of("/wiki").to(roomTitle).emit("messageToClients", fullMsg);
     });
   });

@@ -23,6 +23,7 @@ function joinNS(endpoint) {
     Array.from(roomNodes).forEach((elem) => {
       elem.addEventListener("click", (e) => {
         console.log("Some one clicked on", e.target.innerText);
+        joinRoom(e.target.innerText);
       });
     });
     const topRoom = document.querySelector(".room");

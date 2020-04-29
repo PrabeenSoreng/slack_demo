@@ -2,7 +2,7 @@ function joinRoom(roomName) {
   nsSocket.emit("joinRoom", roomName);
 
   nsSocket.on("historyCatchUp", (history) => {
-    console.log(history);
+    // console.log(history);
     const messagesUl = document.querySelector("#messages");
     messagesUl.innerHTML = "";
     history.forEach((msg) => {
@@ -18,5 +18,16 @@ function joinRoom(roomName) {
       ${numMembers} <span class="glyphicon glyphicon-user"></span>
     `;
     document.querySelector(".curr-room-text").innerText = `${roomName}`;
+  });
+  let searchBox = document.querySelector("#search-box");
+  searchBox.addEventListener("input", (e) => {
+    let messages = Array.from(document.getElementsByClassName("message-text"));
+    messages.forEach((msg) => {
+      if (
+        msg.innerText.toLowerCase().indexOf(e.target.value.toLowerCase()) === -1
+      )
+        msg.style.display = "none";
+      else msg.style.display = "block";
+    });
   });
 }

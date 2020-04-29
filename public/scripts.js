@@ -19,6 +19,7 @@ socket.on("nsList", (nsData) => {
     elem.addEventListener("click", (e) => {
       const nsEndpoint = elem.getAttribute("ns");
       console.log(`${nsEndpoint} I should go to now.`);
+      joinNS(nsEndpoint);
     });
   });
   joinNS("/wiki");

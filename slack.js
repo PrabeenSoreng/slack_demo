@@ -21,7 +21,8 @@ io.on("connection", (socket) => {
 
 namespaces.forEach((namespace) => {
   io.of(namespace.endpoint).on("connection", (nsSocket) => {
-    console.log(`${nsSocket.id} has joined ${namespace.endpoint}`);
+    const username = nsSocket.handshake.query.username;
+    // console.log(`${nsSocket.id} has joined ${namespace.endpoint}`);
     nsSocket.emit("nsRoomLoad", namespace.rooms);
 
     nsSocket.on("joinRoom", (roomToJoin) => {
@@ -40,7 +41,7 @@ namespaces.forEach((namespace) => {
       const fullMsg = {
         text: msg.text,
         time: Date.now(),
-        username: "rbunch",
+        username: username,
         avatar: "https://via.placeholder.com/30",
       };
       const roomTitle = Object.keys(nsSocket.rooms)[1];
@@ -48,7 +49,7 @@ namespaces.forEach((namespace) => {
         return room.roomTitle === roomTitle;
       });
       nsRoom.addMessage(fullMsg);
-      console.log(nsRoom);
+      // console.log(nsRoom);
       io.of(namespace.endpoint).to(roomTitle).emit("messageToClients", fullMsg);
     });
   });

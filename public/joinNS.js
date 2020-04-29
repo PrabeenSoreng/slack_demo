@@ -22,7 +22,7 @@ function joinNS(endpoint) {
     let roomNodes = document.getElementsByClassName("room");
     Array.from(roomNodes).forEach((elem) => {
       elem.addEventListener("click", (e) => {
-        console.log("Some one clicked on", e.target.innerText);
+        // console.log("Some one clicked on", e.target.innerText);
         joinRoom(e.target.innerText);
       });
     });
@@ -32,7 +32,7 @@ function joinNS(endpoint) {
   });
 
   nsSocket.on("messageToClients", (msg) => {
-    console.log(msg);
+    // console.log(msg);
     const newMsg = buildHTML(msg);
     document.querySelector("#messages").innerHTML += newMsg;
   });
